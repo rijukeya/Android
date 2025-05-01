@@ -23,21 +23,18 @@ public class Photo implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String filePath;
-    private LocalDateTime dateTaken;
     private String caption;
     private Map<String, Set<String>> tags;
     private Album album;
 
     public Photo(String filePath) {
         this.filePath = filePath;
-        this.dateTaken = getLastModifiedDateTime(new File(filePath));
         this.caption = "";
         this.tags = new HashMap<>();
     }
 
     public Photo(String filePath, LocalDateTime dateTaken, String caption) {
         this.filePath = filePath;
-        this.dateTaken = dateTaken;
         this.caption = caption;
         this.tags = new HashMap<>();
     }
@@ -56,14 +53,6 @@ public class Photo implements Serializable {
 
     public void setAlbum(Album album) {
         this.album = album;
-    }
-
-    public LocalDateTime getDateTaken() {
-        return dateTaken;
-    }
-
-    public void setDateTaken(LocalDateTime dateTaken) {
-        this.dateTaken = dateTaken;
     }
 
     public String getCaption() {
@@ -106,7 +95,6 @@ public class Photo implements Serializable {
     public String toString() {
         return "Photo{" +
                 "filePath='" + filePath + '\'' +
-                ", dateTaken=" + dateTaken +
                 ", caption='" + caption + '\'' +
                 ", tags=" + tags +
                 '}';
