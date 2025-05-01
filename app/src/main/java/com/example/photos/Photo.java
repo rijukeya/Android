@@ -84,14 +84,8 @@ public class Photo implements Serializable {
         }
     }
 
-    public static LocalDateTime getLastModifiedDateTime(File file) {
-        try {
-            BasicFileAttributes attributes = java.nio.file.Files.readAttributes(file.toPath(), BasicFileAttributes.class);
-            Instant lastModifiedInstant = attributes.lastModifiedTime().toInstant();
-            return LocalDateTime.ofInstant(lastModifiedInstant, ZoneId.systemDefault());
-        } catch (Exception e) {
-            return null;
-        }
+    public String getName() {
+        return new File(filePath).getName();
     }
 
     @Override
