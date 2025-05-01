@@ -1,7 +1,6 @@
 package com.example.photos;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,17 +8,17 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.photos.databinding.FragmentFirstBinding;
 
 import java.util.ArrayList;
 
-public class FirstFragment extends Fragment {
+public class Home extends Fragment {
 
     private FragmentFirstBinding binding;
     private ArrayAdapter<Album> albumAdapter;
@@ -49,14 +48,27 @@ public class FirstFragment extends Fragment {
         // Set up ListView item click listener to open an album
         binding.albumListView.setOnItemClickListener((AdapterView<?> parent, View v, int position, long id) -> {
             Album selectedAlbum = Album.albums.get(position);
-            Toast.makeText(requireContext(), "Opening album: " + selectedAlbum.getName(), Toast.LENGTH_SHORT).show();
-            // Navigate to album details (implement navigation logic here)
+            Toast.makeText(requireContext(), "Selected album: " + selectedAlbum.getName(), Toast.LENGTH_SHORT).show();
+            binding.openAlbumButton.setTag(selectedAlbum); // Store the selected album in the button's tag
         });
 
         // Set up button listeners
         binding.createAlbumButton.setOnClickListener(v -> showCreateAlbumDialog());
         binding.deleteAlbumButton.setOnClickListener(v -> deleteAlbum());
         binding.renameAlbumButton.setOnClickListener(v -> showRenameAlbumDialog());
+        binding.openAlbumButton.setOnClickListener(v -> openAlbum());
+    }
+
+    private void openAlbum() {
+        Album selectedAlbum = (Album) binding.openAlbumButton.getTag();
+        if (selectedAlbum != null) {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("selectedAlbum", selectedAlbum);
+            NavHostFragment.findNavController(Home.this)
+                    .navigate(R.id.action_FirstFragment_to_SecondFragment, bundle);
+        } else {
+            Toast.makeText(requireContext(), "Please select an album to open", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void showCreateAlbumDialog() {
