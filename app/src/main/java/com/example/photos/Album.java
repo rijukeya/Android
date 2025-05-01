@@ -13,6 +13,7 @@ import java.util.List;
  */
 public class Album implements Serializable {
     private static final long serialVersionUID = 1L;
+    public static ArrayList<Album> albums;
 
     /**
      * The name of the album.
@@ -133,6 +134,10 @@ public class Album implements Serializable {
             targetAlbum.addPhoto(photo);
             removePhoto(photo);
         }
+    }
+
+    public int getNumPhotos() {
+        return photos.size();
     }
 
     /**

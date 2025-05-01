@@ -27,13 +27,16 @@ public class Photo implements Serializable {
     private Map<String, Set<String>> tags;
     private Album album;
 
+    static String currentDir = System.getProperty("user.dir");
+    static String storageDir = currentDir+"/src/photos/local";
+
     public Photo(String filePath) {
         this.filePath = filePath;
         this.caption = "";
         this.tags = new HashMap<>();
     }
 
-    public Photo(String filePath, LocalDateTime dateTaken, String caption) {
+    public Photo(String filePath, String caption) {
         this.filePath = filePath;
         this.caption = caption;
         this.tags = new HashMap<>();
