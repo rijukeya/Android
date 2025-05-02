@@ -1,5 +1,13 @@
 package com.example.photos;
 
+import android.content.Context;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +21,27 @@ import java.util.List;
  */
 public class Album implements Serializable {
     private static final long serialVersionUID = 1L;
-    public static ArrayList<Album> albums;
+    public static ArrayList<Album> albums = new ArrayList<>();
+
+    public static void serializeAlbums(Context context) throws IOException {
+        File file = new File(context.getFilesDir(), "albumList.ser");
+        try (FileOutputStream fos = new FileOutputStream(file);
+             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+            oos.writeObject(albums);
+        }
+    }
+
+    public static void deserializeAlbums(Context context) throws IOException, ClassNotFoundException {
+        File file = new File(context.getFilesDir(), "albumList.ser");
+        if (file.exists()) {
+            try (FileInputStream fis = new FileInputStream(file);
+                 ObjectInputStream ois = new ObjectInputStream(fis)) {
+                albums = (ArrayList<Album>) ois.readObject();
+            }
+        } else {
+            albums = new ArrayList<>(); // Initialize empty list if no file exists
+        }
+    }
 
     /**
      * The name of the album.

@@ -1,6 +1,7 @@
 package com.example.photos;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,6 +58,10 @@ public class Home extends Fragment {
         binding.deleteAlbumButton.setOnClickListener(v -> deleteAlbum());
         binding.renameAlbumButton.setOnClickListener(v -> showRenameAlbumDialog());
         binding.openAlbumButton.setOnClickListener(v -> openAlbum());
+        binding.searchButton.setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), SearchActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void openAlbum() {
