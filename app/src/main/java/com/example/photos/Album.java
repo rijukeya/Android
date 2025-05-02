@@ -1,6 +1,7 @@
 package com.example.photos;
 
 import android.content.Context;
+import android.os.Environment;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,6 +24,21 @@ public class Album implements Serializable {
     private static final long serialVersionUID = 1L;
     public static ArrayList<Album> albums = new ArrayList<>();
 
+
+    public List<File> loadPhotosFromGallery() {
+        File picturesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File[] files = picturesDir.listFiles();
+        List<File> photos = new ArrayList<>();
+
+        if (files != null) {
+            for (File file : files) {
+                if (file.isFile() && file.getName().endsWith(".jpg")) {
+                    photos.add(file);
+                }
+            }
+        }
+        return photos;
+    }
     public static void serializeAlbums(Context context) throws IOException {
         File file = new File(context.getFilesDir(), "albumList.ser");
         try (FileOutputStream fos = new FileOutputStream(file);

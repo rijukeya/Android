@@ -18,7 +18,10 @@
             android:theme="@style/Theme.Photos">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                <action android:name="android.intent.action.GET_CONTENT" />
+                <data android:mimeType="image/*" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.OPENABLE" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

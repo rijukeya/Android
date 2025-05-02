@@ -1,6 +1,14 @@
 package com.example.photos;;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.media.MediaScannerConnection;
+import android.os.Environment;
+import android.widget.Toast;
+
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Instant;
@@ -29,6 +37,23 @@ public class Photo implements Serializable {
 
     static String currentDir = System.getProperty("user.dir");
     static String storageDir = currentDir+"/src/photos/local";
+
+    public void savePhotoToGallery(Bitmap bitmap, String fileName, Context context) {
+        File picturesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File photoFile = new File(picturesDir, fileName);
+
+        try (FileOutputStream fos = new FileOutputStream(photoFile)) {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
+
+            // Notify the gallery about the new photo
+            MediaScannerConnection.scanFile(context, new String[]{photoFile.getAbsolutePath()}, null, null);
+            Toast.makeText(context, "Photo saved to gallery", Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(context, "Failed to save photo", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     public Photo(String filePath) {
         this.filePath = filePath;
