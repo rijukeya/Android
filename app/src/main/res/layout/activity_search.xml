@@ -27,8 +27,15 @@
     <GridView
         android:id="@+id/search_results"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="520dp"
+        android:horizontalSpacing="8dp"
         android:numColumns="3"
-        android:verticalSpacing="8dp"
-        android:horizontalSpacing="8dp" />
+        android:verticalSpacing="8dp" />
+
+    <Button
+        android:id="@+id/back_to_home_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Back to Home" />
 </LinearLayout>

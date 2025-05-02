@@ -29,7 +29,6 @@ public class SearchActivity extends AppCompatActivity {
     private GridView searchResults;
     private ArrayAdapter<String> autocompleteAdapter;
     private PhotoAdapter photoAdapter;
-
     private List<Photo> allPhotos;
     private List<Photo> matchingPhotos;
     private List<String> autocompleteSuggestions;
@@ -42,6 +41,12 @@ public class SearchActivity extends AppCompatActivity {
         searchInput = findViewById(R.id.search_input);
         autocompleteList = findViewById(R.id.autocomplete_list);
         searchResults = findViewById(R.id.search_results);
+
+        findViewById(R.id.back_to_home_button).setOnClickListener(v -> {
+            Intent intent = new Intent(SearchActivity.this, Home.class);
+            startActivity(intent);
+            finish(); // Optional: Close the current activity
+        });
 
         allPhotos = getAllPhotos();
         matchingPhotos = new ArrayList<>();
@@ -72,7 +77,6 @@ public class SearchActivity extends AppCompatActivity {
             autocompleteList.setVisibility(View.GONE);
         });
 
-        findViewById(R.id.search_button).setOnClickListener(v -> performSearch());
     }
 
     private List<Photo> getAllPhotos() {

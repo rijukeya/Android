@@ -9,8 +9,6 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -22,7 +20,6 @@ import com.example.photos.databinding.ActivityMainBinding;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,8 +39,6 @@ public class MainActivity extends AppCompatActivity {
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-        createStockAlbum();
-
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -54,39 +49,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void createStockAlbum() {
-        // Create the "stock" album
-        Album stockAlbum = new Album("stock");
-
-        // Add photos to the album
-        ArrayList<Photo> stockPhotos = new ArrayList<>();
-        stockPhotos.add(createPhotoFromDrawable(R.drawable.messi, "mess.jpg"));
-        stockPhotos.add(createPhotoFromDrawable(R.drawable.messi2, "messi2.jpg"));
-        stockPhotos.add(createPhotoFromDrawable(R.drawable.neymar1, "neyamr1.jpg"));
-        stockPhotos.add(createPhotoFromDrawable(R.drawable.neymar2, "neyamr2.jpg"));
-
-        // Add photos to the album
-        for (Photo photo : stockPhotos) {
-            stockAlbum.addPhoto(photo);
-        }
-
-        // Add the album to the global album list
-        if (Album.albums == null) {
-            Album.albums = new ArrayList<>();
-        }
-        Album.albums.add(stockAlbum);
-    }
-
-    private Photo createPhotoFromDrawable(int drawableId, String fileName) {
-        // Convert drawable resource to Bitmap
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), drawableId);
-
-        // Save the photo to the gallery (optional)
-        Photo photo = new Photo(fileName);
-        photo.setCaption(fileName);
-
-        return photo;
-    }
     private static final int REQUEST_IMAGE_GET = 1;
 
     public void selectImageFromGallery() {

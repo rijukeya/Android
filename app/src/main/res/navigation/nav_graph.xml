@@ -22,6 +22,9 @@
         tools:layout="@layout/fragment_second">
 
         <action
+            android:id="@+id/action_SecondFragment_to_addPhotoFragment"
+            app:destination="@id/addPhotoFragment" />
+        <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
         <action
@@ -33,4 +36,9 @@
         android:name="com.example.photos.PhotoDisplayFragment"
         android:label="Photo Display"
         tools:layout="@layout/fragment_photo_display" />
+    <fragment
+        android:id="@+id/addPhotoFragment"
+        android:name="com.example.photos.AddPhotoFragment"
+        android:label="Add Photo"
+        tools:layout="@layout/fragment_add_photo" />
 </navigation>
