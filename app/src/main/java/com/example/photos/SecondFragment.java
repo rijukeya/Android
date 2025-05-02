@@ -109,15 +109,42 @@ public class SecondFragment extends Fragment {
     private void showPhotoOptionsDialog(Photo photo, int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setTitle("Photo Options");
-        builder.setItems(new String[]{"Display Photo", "Delete Photo"}, (dialog, which) -> {
+        builder.setItems(new String[]{"Display Photo", "Delete Photo", "Move Photo"}, (dialog, which) -> {
             if (which == 0) {
                 Toast.makeText(requireContext(), "Displaying photo: " + photo.getFilePath(), Toast.LENGTH_SHORT).show();
             } else if (which == 1) {
                 selectedAlbum.removePhoto(photo);
                 photoAdapter.notifyDataSetChanged();
                 Toast.makeText(requireContext(), "Photo deleted", Toast.LENGTH_SHORT).show();
+            } else if (which == 2) {
+                movePhotoToAnotherAlbum(photo);
             }
         });
+        builder.show();
+    }
+
+    private void movePhotoToAnotherAlbum(Photo photo) {
+        if (Album.albums == null || Album.albums.isEmpty()) {
+            Toast.makeText(requireContext(), "No albums available to move the photo", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Select Target Album");
+
+        String[] albumNames = Album.albums.stream().map(Album::getName).toArray(String[]::new);
+        builder.setItems(albumNames, (dialog, which) -> {
+            Album targetAlbum = Album.albums.get(which);
+            if (targetAlbum != null && targetAlbum != selectedAlbum) {
+                selectedAlbum.movePhotoToAlbum(photo, targetAlbum);
+                photoAdapter.notifyDataSetChanged();
+                Toast.makeText(requireContext(), "Photo moved to album: " + targetAlbum.getName(), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(requireContext(), "Cannot move to the same album", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
         builder.show();
     }
 
