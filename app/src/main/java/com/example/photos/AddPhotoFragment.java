@@ -29,6 +29,9 @@ public class AddPhotoFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         binding.buttonSelectImage.setOnClickListener(v -> openGallery());
+        binding.buttonBackToAlbum.setOnClickListener(v -> {
+            requireActivity().onBackPressed(); // Navigate back to SecondFragment
+        });
     }
 
     private void openGallery() {
@@ -47,11 +50,13 @@ public class AddPhotoFragment extends Fragment {
                 result.putString("selectedImageUri", selectedImageUri.toString());
                 requireActivity().getSupportFragmentManager().setFragmentResult("addPhotoResult", result);
                 Toast.makeText(requireContext(), "Image selected: " + selectedImageUri.toString(), Toast.LENGTH_SHORT).show();
-                // Navigate back to SecondFragment
-                requireActivity().onBackPressed();
+                // Reopen the gallery
+                openGallery();
             }
         }
     }
+
+
 
     @Override
     public void onDestroyView() {
