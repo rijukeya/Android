@@ -1,82 +1,71 @@
 package com.example.photos;
 
-
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.content.Context;
-import android.view.View;
-import android.view.ViewGroup;
-import android.net.Uri;
 
-import com.example.photos.Photo;
-
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PhotoAdapter extends BaseAdapter {
     private Context context;
-    public static ArrayList<Photo> uris = new ArrayList<>();
+    private ArrayList<Photo> photos;
 
     public PhotoAdapter(Context context, List<Photo> photos) {
         this.context = context;
-        uris = new ArrayList<>(photos);
+        this.photos = new ArrayList<>(photos);
     }
 
-        @Override
-        public int getCount() {
-            return uris.size();
-        }
-
-        @Override
-        public Object getItem(int index) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int index) {
-            return 0;
-        }
-
-        public View getView(int index, View convertView, ViewGroup parent) {
-            ImageView imageView;
-            if (convertView == null) {  // if it's not recycled, initialize some attributes
-                imageView = new ImageView(context);
-                imageView.setLayoutParams(new GridView.LayoutParams(150, 150));
-                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                imageView.setPadding(8, 8, 8, 8);
-            } else {
-                imageView = (ImageView) convertView;
-            }
-
-            imageView.setImageURI(Uri.parse(uris.get(index).getName()));
-
-            return imageView;
-        }
-
-        public Photo getPhoto(int index){
-            return uris.get(index);
-        }
-
-        public void add(Uri add) {
-//        uris.add(new Photo(add));
-        }
-
-        public void add(Photo add) {
-            uris.add(add);
-        }
-
-        public void remove(int index) {
-            uris.remove(index);
-        }
-
-        public ArrayList<Photo> getPhotos() {
-            return uris;
-        }
-
-        public void clear() {
-            uris.clear();
-        }
-
+    @Override
+    public int getCount() {
+        return photos.size();
     }
 
+    @Override
+    public Object getItem(int index) {
+        return photos.get(index);
+    }
+
+    @Override
+    public long getItemId(int index) {
+        return index;
+    }
+
+    @Override
+    public View getView(int index, View convertView, ViewGroup parent) {
+        ImageView imageView;
+        if (convertView == null) {
+            imageView = new ImageView(context);
+            imageView.setLayoutParams(new GridView.LayoutParams(150, 150));
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setPadding(8, 8, 8, 8);
+        } else {
+            imageView = (ImageView) convertView;
+        }
+
+        // Load the thumbnail image using BitmapFactory
+        String filePath = photos.get(index).getFilePath();
+        File imgFile = new File(filePath);
+        if (imgFile.exists()) {
+            Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+            imageView.setImageBitmap(bitmap);
+        } else {
+            imageView.setImageResource(R.drawable.error); // Fallback for missing files
+        }
+
+        return imageView;
+    }
+
+    public void updatePhotos(List<Photo> newPhotos) {
+        this.photos.clear();
+        this.photos.addAll(newPhotos);
+        notifyDataSetChanged();
+    }
+}
