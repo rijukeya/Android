@@ -95,7 +95,15 @@ public class SecondFragment extends Fragment {
     }
 
     private void displayPhoto() {
-        Toast.makeText(requireContext(), "Select a photo from the grid to display", Toast.LENGTH_SHORT).show();
+        if (selectedAlbum != null && !selectedAlbum.getPhotos().isEmpty()) {
+            Bundle args = new Bundle();
+            args.putSerializable("album", selectedAlbum);
+            args.putInt("photoIndex", 0); // Start with the first photo
+            NavHostFragment.findNavController(SecondFragment.this)
+                    .navigate(R.id.action_SecondFragment_to_PhotoDisplayFragment, args);
+        } else {
+            Toast.makeText(requireContext(), "No photos to display", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void showPhotoOptionsDialog(Photo photo, int position) {
