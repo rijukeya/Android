@@ -1,16 +1,12 @@
 package com.example.photos;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,14 +46,13 @@ public class PhotoAdapter extends BaseAdapter {
             imageView = (ImageView) convertView;
         }
 
-        // Load the thumbnail image using BitmapFactory
-        String filePath = photos.get(index).getFilePath();
-        File imgFile = new File(filePath);
-        if (imgFile.exists()) {
-            Bitmap bitmap = BitmapFactory.decodeFile(filePath);
-            imageView.setImageBitmap(bitmap);
+        // Load the image from the drawable folder
+        String fileName = photos.get(index).getFilePath(); // Assuming filePath stores the drawable name
+        int resId = context.getResources().getIdentifier(fileName, "drawable", context.getPackageName());
+        if (resId != 0) {
+            imageView.setImageResource(resId);
         } else {
-            imageView.setImageResource(R.drawable.error); // Fallback for missing files
+            imageView.setImageResource(R.drawable.error); // Fallback for missing resources
         }
 
         return imageView;
