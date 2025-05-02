@@ -12,13 +12,15 @@ import android.net.Uri;
 import com.example.photos.Photo;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PhotoAdapter extends BaseAdapter {
     private Context context;
     public static ArrayList<Photo> uris = new ArrayList<>();
 
-    public void ImageAdapter(Context c) {
-            context = c;
+    public PhotoAdapter(Context context, List<Photo> photos) {
+        this.context = context;
+        uris = new ArrayList<>(photos);
     }
 
         @Override

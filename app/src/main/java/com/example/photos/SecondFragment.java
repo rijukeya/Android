@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,6 +20,7 @@ public class SecondFragment extends Fragment {
 
     private FragmentSecondBinding binding;
     private Album selectedAlbum;
+    private PhotoAdapter photoAdapter;
 
     @Override
     public View onCreateView(
@@ -40,6 +43,16 @@ public class SecondFragment extends Fragment {
         if (selectedAlbum != null) {
             Toast.makeText(requireContext(), "Opened album: " + selectedAlbum.getName(), Toast.LENGTH_SHORT).show();
         }
+
+        // Initialize the photo adapter and set it to the GridView
+        photoAdapter = new PhotoAdapter(requireContext(), selectedAlbum.getPhotos());
+        binding.photoGridView.setAdapter(photoAdapter);
+
+        // Set up GridView item click listener
+        binding.photoGridView.setOnItemClickListener((AdapterView<?> parent, View v, int position, long id) -> {
+            Photo selectedPhoto = selectedAlbum.getPhotos().get(position);
+            showPhotoOptionsDialog(selectedPhoto, position);
+        });
 
         // Set up button listeners
         binding.buttonAddPhoto.setOnClickListener(v -> showAddPhotoDialog());
@@ -66,6 +79,7 @@ public class SecondFragment extends Fragment {
             if (!filePath.isEmpty()) {
                 Photo newPhoto = new Photo(filePath);
                 selectedAlbum.addPhoto(newPhoto);
+                photoAdapter.notifyDataSetChanged();
                 Toast.makeText(requireContext(), "Photo added to album: " + filePath, Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(requireContext(), "Photo path cannot be empty", Toast.LENGTH_SHORT).show();
@@ -77,42 +91,26 @@ public class SecondFragment extends Fragment {
     }
 
     private void showRemovePhotoDialog() {
-        if (selectedAlbum.getPhotos().isEmpty()) {
-            Toast.makeText(requireContext(), "No photos to remove", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Remove Photo");
-
-        final EditText input = new EditText(requireContext());
-        input.setHint("Enter photo file path to remove");
-        builder.setView(input);
-
-        builder.setPositiveButton("Remove", (dialog, which) -> {
-            String filePath = input.getText().toString().trim();
-            Photo photoToRemove = null;
-            for (Photo photo : selectedAlbum.getPhotos()) {
-                if (photo.getFilePath().equals(filePath)) {
-                    photoToRemove = photo;
-                    break;
-                }
-            }
-
-            if (photoToRemove != null) {
-                selectedAlbum.removePhoto(photoToRemove);
-                Toast.makeText(requireContext(), "Photo removed: " + filePath, Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(requireContext(), "Photo not found in album", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
-        builder.show();
+        Toast.makeText(requireContext(), "Select a photo from the grid to remove", Toast.LENGTH_SHORT).show();
     }
 
     private void displayPhoto() {
-        Toast.makeText(requireContext(), "Display photo feature not implemented yet", Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), "Select a photo from the grid to display", Toast.LENGTH_SHORT).show();
+    }
+
+    private void showPhotoOptionsDialog(Photo photo, int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Photo Options");
+        builder.setItems(new String[]{"Display Photo", "Delete Photo"}, (dialog, which) -> {
+            if (which == 0) {
+                Toast.makeText(requireContext(), "Displaying photo: " + photo.getFilePath(), Toast.LENGTH_SHORT).show();
+            } else if (which == 1) {
+                selectedAlbum.removePhoto(photo);
+                photoAdapter.notifyDataSetChanged();
+                Toast.makeText(requireContext(), "Photo deleted", Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.show();
     }
 
     @Override
